@@ -1,0 +1,2 @@
+# student_management_system
+通过springboot和vue将原有项目进行了重构
