@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jackeyj.sms.dao.GradeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.jackeyj.sms.entity.GradeEntity" id="gradeMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="manager" column="manager"/>
+        <result property="email" column="email"/>
+        <result property="telephone" column="telephone"/>
+        <result property="introduction" column="introduction"/>
+    </resultMap>
+
+    <sql id="baseSql">
+        id, name, manager, email, telephone, introduction
+    </sql>
+
+    <select id="selectGradeNames" resultType="com.jackeyj.sms.entity.vo.GradePojo">
+        select
+            id, name
+        from
+            tb_grade
+    </select>
+
+    <select id="selectList" resultType="com.jackeyj.sms.entity.GradeEntity">
+        select
+            <include refid="baseSql"></include>
+        from
+            tb_grade
+    </select>
+
+    <delete id="deleteById">
+        delete from
+            tb_grade
+        where
+            id = #{id}
+    </delete>
+
+    <insert id="insert">
+        insert into
+            tb_grade
+            (name, manager, email, telephone, introduction)
+        values
+            (#{name}, #{manager}, #{email}, #{telephone}, #{introduction})
+    </insert>
+
+    <select id="selectById" resultMap="gradeMap">
+        select
+            <include refid="baseSql"></include>
+        from
+            tb_grade
+        where
+            id = #{id}
+    </select>
+
+    <update id="updateInfo">
+        update
+            tb_grade
+        set
+            name = #{name}, manager = #{manager}, email = #{email}, telephone = #{telephone}, introduction = #{introduction}
+        where
+            id = #{id}
+    </update>
+
+</mapper>

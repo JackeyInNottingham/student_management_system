@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jackeyj.sms.dao.ClazzDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.jackeyj.sms.entity.ClazzEntity" id="clazzMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="number" column="number"/>
+        <result property="introduction" column="introduction"/>
+        <result property="coordinator" column="coordinator"/>
+        <result property="email" column="email"/>
+        <result property="telephone" column="telephone"/>
+        <result property="gradeName" column="grade_name"/>
+    </resultMap>
+
+    <sql id="baseSql">
+        id, name, number, introduction, coordinator, email, telephone, grade_name
+    </sql>
+
+    <sql id="voSql">
+        id, `name`
+    </sql>
+
+    <select id="findAll" resultType="com.jackeyj.sms.entity.ClazzEntity">
+        select
+            <include refid="voSql"></include>
+        from
+            tb_clazz
+    </select>
+
+    <select id="selectClazzNames" resultType="com.jackeyj.sms.entity.vo.ClazzPojo">
+        select
+            <include refid="voSql"></include>
+        from
+            tb_clazz
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into
+            tb_clazz
+            (`name`, `number`, introduction, coordinator, email, telephone, grade_name)
+        values
+            (#{name}, #{number}, #{introduction}, #{coordinator}, #{email}, #{telephone}, #{gradeName})
+    </insert>
+
+    <delete id="deleteById">
+        delete from
+            tb_clazz
+        where
+            id = #{id}
+    </delete>
+
+    <select id="selectList" resultMap="clazzMap">
+        select
+            <include refid="baseSql"></include>
+        from
+            tb_clazz
+    </select>
+
+    <select id="filtrateClazz" resultMap="clazzMap">
+        select
+            <include refid="baseSql"></include>
+        from
+            tb_clazz
+        <where>
+            <if test="gradeName != null and gradeName != ''">
+                and grade_name = #{gradeName}
+            </if>
+            <if test="coordinator != null and coordinator != ''">
+                and coordinator = #{coordinator}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateInfo">
+        update
+            tb_clazz
+        set
+            name = #{name}, number = #{number}, introduction = #{introduction}, coordinator = #{coordinator},
+            email = #{email}, telephone = #{telephone}, grade_name = #{gradeName}
+        where
+            id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="clazzMap">
+        select
+            <include refid="baseSql"></include>
+        from
+            tb_clazz
+        where
+            id = #{id}
+    </select>
+
+</mapper>

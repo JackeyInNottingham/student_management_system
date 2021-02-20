@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jackeyj.sms.dao.TeacherDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.jackeyj.sms.entity.TeacherEntity" id="teacherMap">
+        <result property="id" column="id"/>
+        <result property="tno" column="tno"/>
+        <result property="name" column="name"/>
+        <result property="gender" column="gender"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="telephone" column="telephone"/>
+        <result property="address" column="address"/>
+        <result property="portraitPath" column="portrait_path"/>
+        <result property="clazzName" column="clazz_name"/>
+    </resultMap>
+
+    <resultMap type="com.jackeyj.sms.entity.vo.TeacherVo" id="teacherVoMap">
+        <result property="id" column="id"/>
+        <result property="tno" column="tno"/>
+        <result property="name" column="name"/>
+        <result property="gender" column="gender"/>
+        <result property="email" column="email"/>
+        <result property="telephone" column="telephone"/>
+        <result property="address" column="address"/>
+        <result property="portraitPath" column="portrait_path"/>
+        <result property="clazzName" column="clazz_name"/>
+    </resultMap>
+
+    <sql id="baseSql">
+        id, tno, name, gender, password, email, telephone, address, portrait_path, clazz_name
+    </sql>
+
+    <sql id="voSql">
+        id, tno, name, gender, email, telephone, address, portrait_path, clazz_name
+    </sql>
+
+    <select id="selectByUsernameAndPassword" resultMap="teacherVoMap">
+        select
+            <include refid="voSql"></include>
+        from
+            tb_teacher
+        where
+            `name` = #{username}
+        and
+            password = #{password}
+    </select>
+
+    <select id="findAll" resultType="com.jackeyj.sms.entity.TeacherEntity">
+        select
+            <include refid="baseSql"></include>
+        from
+            tb_teacher
+        <where>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="clazzName != null and clazzName != ''">
+                and clazz_name = #{clazzName}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectList" resultType="com.jackeyj.sms.entity.vo.TeacherVo" resultMap="teacherVoMap">
+        select
+            <include refid="voSql"></include>
+        from
+            tb_teacher
+    </select>
+
+    <select id="filtrateTeacher" resultMap="teacherVoMap">
+        select
+        <include refid="voSql"></include>
+        from
+        tb_teacher
+        <where>
+            <if test="teacherName != '' and teacherName != null">
+                and `name` like concat('%', concat(#{teacherName}, '%'))
+            </if>
+            <if test="clazzName != null and clazzName != ''">
+                and clazz_name = #{clazzName}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into
+            tb_teacher
+            (tno, `name`, gender, email, telephone, address, portrait_path, clazz_name)
+        values
+            (#{tno}, #{name}, #{gender}, #{email}, #{telephone}, #{address}, #{portraitPath}, #{clazzName})
+    </insert>
+
+    <delete id="deleteById">
+        delete from
+            tb_teacher
+        where
+            id = #{id}
+    </delete>
+
+    <select id="selectById" resultMap="teacherVoMap">
+        select
+            <include refid="voSql"></include>
+        from
+            tb_teacher
+        where
+            id = #{id}
+    </select>
+
+    <select id="selectTeacherNames" resultType="com.jackeyj.sms.entity.vo.TeacherPojo">
+        select
+            id, name
+        from
+            tb_teacher
+    </select>
+
+    <update id="updateInfo">
+        update
+            tb_teacher
+        set
+            tno = #{tno}, `name` = #{name}, gender = #{gender}, telephone = #{telephone},
+             address = #{address}, portrait_path = #{portraitPath}, clazz_name = #{clazzName}
+        where
+            id = #{id}
+    </update>
+
+    <select id="selectPasswordById" resultType="string">
+        select
+            password
+        from
+            tb_teacher
+        where
+            id = #{id}
+    </select>
+
+    <update id="updatePassword">
+        update
+            tb_teacher
+        set
+            password = #{newPassword}
+        where
+            id = #{id}
+    </update>
+
+    <update id="changePortrait">
+        update
+            tb_teacher
+        set
+            portrait_path = #{newPortraitPath}
+        where
+            id = #{id}
+    </update>
+
+
+</mapper>
